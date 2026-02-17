@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Трекер задач</string>
+
+    <!-- Task List -->
+    <string name="new_task">Новая задача</string>
+    <string name="search_tasks">Поиск задач…</string>
+    <string name="no_tasks_yet">Задач пока нет</string>
+    <string name="tap_plus_to_create">Нажмите + чтобы создать первую задачу</string>
+    <string name="no_matching_tasks">Ничего не найдено</string>
+    <string name="try_different_filters">Попробуйте другие фильтры или поисковой запрос</string>
+    <string name="task_count">%1$d задач</string>
+    <string name="completed_count">%1$d выполнено</string>
+
+    <!-- Task Create/Edit -->
+    <string name="create_task">Создать задачу</string>
+    <string name="edit_task">Редактировать задачу</string>
+    <string name="task_title">Название задачи</string>
+    <string name="task_description">Описание (необязательно)</string>
+    <string name="title_required">Название обязательно</string>
+    <string name="select_tags">Выберите теги</string>
+    <string name="save_changes">Сохранить изменения</string>
+
+    <!-- Custom Tags -->
+    <string name="add_custom_tag">Добавить свой тег</string>
+    <string name="tag_name_en">Название тега (English)</string>
+    <string name="tag_name_ru">Название тега (Русский)</string>
+    <string name="tag_group">Группа</string>
+    <string name="add">Добавить</string>
+
+    <!-- Tag Groups -->
+    <string name="group_readiness">📋 Готовность</string>
+    <string name="group_importance">⚡ Важность</string>
+    <string name="group_urgency">🔥 Срочность</string>
+    <string name="group_sphere">🌐 Сфера</string>
+    <string name="group_custom">✨ Свои</string>
+
+    <!-- Filter & Sort -->
+    <string name="filter_by_tags">Фильтр по тегам</string>
+    <string name="clear_all">Очистить</string>
+    <string name="sort_by">Сортировка</string>
+    <string name="sort_date_desc">Сначала новые</string>
+    <string name="sort_date_asc">Сначала старые</string>
+    <string name="sort_alpha_asc">А → Я</string>
+    <string name="sort_alpha_desc">Я → А</string>
+    <string name="sort_importance">По важности</string>
+    <string name="sort_urgency">По срочности</string>
+    <string name="sort_sphere">По сфере</string>
+
+    <!-- Task Detail -->
+    <string name="task_details">Детали задачи</string>
+    <string name="tags">Теги</string>
+    <string name="created_at">Создана: %1$s</string>
+    <string name="status_completed">Выполнена</string>
+    <string name="status_active">Активна</string>
+    <string name="delete_task">Удалить задачу</string>
+    <string name="delete_confirmation">Вы уверены, что хотите удалить эту задачу? Это действие нельзя отменить.</string>
+    <string name="delete">Удалить</string>
+
+    <!-- Settings -->
+    <string name="settings">Настройки</string>
+    <string name="language">Язык</string>
+    <string name="locale_system">Системный</string>
+    <string name="locale_english">English</string>
+    <string name="locale_russian">Русский</string>
+    <string name="about">О приложении</string>
+    <string name="app_version">Версия 1.0</string>
+    <string name="theme">Тема</string>
+    <string name="theme_dynamic_description">Динамические цвета из обоев (Material You)</string>
+
+    <!-- Common -->
+    <string name="close">Закрыть</string>
+    <string name="cancel">Отмена</string>
+    <string name="back">Назад</string>
+</resources>
