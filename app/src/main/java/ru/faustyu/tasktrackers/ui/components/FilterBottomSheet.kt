@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.faustyu.tasktrackers.R
@@ -24,12 +25,14 @@ fun FilterBottomSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val localizedContext = LocalContext.current
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
+        CompositionLocalProvider(LocalContext provides localizedContext) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,6 +99,8 @@ fun FilterBottomSheet(
                     }
                 }
             }
+            }
+        }
         }
     }
 }
