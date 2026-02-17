@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivityResultRegistryOwner
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -15,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.savedstate.compose.LocalSavedStateRegistryOwner
 import ru.faustyu.tasktrackers.navigation.AppNavigation
 import ru.faustyu.tasktrackers.ui.theme.TaskTrackersTheme
 import ru.faustyu.tasktrackers.viewmodel.SettingsViewModel
@@ -49,9 +52,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val settingsViewModel: SettingsViewModel = viewModel()
             val currentLocale by settingsViewModel.currentLocale.collectAsStateWithLifecycle()
+            val currentTheme by settingsViewModel.currentTheme.collectAsStateWithLifecycle()
 
             LocaleWrapper(localeCode = currentLocale) {
-                TaskTrackersTheme {
+                TaskTrackersTheme(themeMode = currentTheme) {
                     AppNavigation(settingsViewModel = settingsViewModel)
                 }
             }
@@ -66,6 +70,11 @@ fun LocaleWrapper(
 ) {
     val context = LocalContext.current
 
+    // Preserve activity-based composition locals before overriding LocalContext
+    val activityResultRegistryOwner = LocalActivityResultRegistryOwner.current
+    val onBackPressedDispatcherOwner = LocalOnBackPressedDispatcherOwner.current
+    val savedStateRegistryOwner = LocalSavedStateRegistryOwner.current
+
     val localizedContext = if (localeCode != "system") {
         val locale = Locale(localeCode)
         val config = Configuration(context.resources.configuration)
@@ -75,7 +84,14 @@ fun LocaleWrapper(
         context
     }
 
-    CompositionLocalProvider(LocalContext provides localizedContext) {
+    // Re-provide activity-based locals because createConfigurationContext returns
+    // a plain ContextWrapper that is NOT an Activity, causing those locals to become null
+    CompositionLocalProvider(
+        LocalContext provides localizedContext,
+        LocalActivityResultRegistryOwner provides activityResultRegistryOwner!!,
+        LocalOnBackPressedDispatcherOwner provides onBackPressedDispatcherOwner!!,
+        LocalSavedStateRegistryOwner provides savedStateRegistryOwner
+    ) {
         content()
     }
 }

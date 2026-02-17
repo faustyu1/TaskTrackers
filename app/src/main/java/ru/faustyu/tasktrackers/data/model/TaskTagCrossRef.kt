@@ -7,7 +7,8 @@ import androidx.room.Relation
 
 @Entity(
     tableName = "task_tag_cross_ref",
-    primaryKeys = ["taskId", "tagId"]
+    primaryKeys = ["taskId", "tagId"],
+    indices = [androidx.room.Index("tagId")]
 )
 data class TaskTagCrossRef(
     val taskId: Long,
@@ -21,5 +22,10 @@ data class TaskWithTags(
         entityColumn = "tagId",
         associateBy = Junction(TaskTagCrossRef::class)
     )
-    val tags: List<Tag>
+    val tags: List<Tag>,
+    @Relation(
+        parentColumn = "taskId",
+        entityColumn = "taskId"
+    )
+    val subtasks: List<Subtask> = emptyList()
 )

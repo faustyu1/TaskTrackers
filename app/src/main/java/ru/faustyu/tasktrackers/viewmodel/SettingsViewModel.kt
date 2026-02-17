@@ -19,6 +19,8 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 object SettingsKeys {
     val LOCALE = stringPreferencesKey("locale")
+    val THEME_MODE = stringPreferencesKey("theme_mode")
+    val HAS_SEEN_ONBOARDING = androidx.datastore.preferences.core.booleanPreferencesKey("has_seen_onboarding")
 }
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -29,10 +31,34 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         .map { prefs -> prefs[SettingsKeys.LOCALE] ?: "system" }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "system")
 
+    val currentTheme: StateFlow<String> = dataStore.data
+        .map { prefs -> prefs[SettingsKeys.THEME_MODE] ?: "system" }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "system")
+
+    val hasSeenOnboarding: StateFlow<Boolean?> = dataStore.data
+        .map { prefs -> prefs[SettingsKeys.HAS_SEEN_ONBOARDING] ?: false }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     fun setLocale(locale: String) {
         viewModelScope.launch {
             dataStore.edit { prefs ->
                 prefs[SettingsKeys.LOCALE] = locale
+            }
+        }
+    }
+
+    fun setTheme(theme: String) {
+        viewModelScope.launch {
+            dataStore.edit { prefs ->
+                prefs[SettingsKeys.THEME_MODE] = theme
+            }
+        }
+    }
+
+    fun setOnboardingSeen() {
+        viewModelScope.launch {
+            dataStore.edit { prefs ->
+                prefs[SettingsKeys.HAS_SEEN_ONBOARDING] = true
             }
         }
     }

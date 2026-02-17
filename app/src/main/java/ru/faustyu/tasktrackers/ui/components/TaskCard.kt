@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,7 +33,7 @@ fun TaskCard(
     taskWithTags: TaskWithTags,
     isRussian: Boolean,
     onToggleComplete: () -> Unit,
-    onDelete: () -> Unit,
+    onArchive: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,7 +43,7 @@ fun TaskCard(
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
             if (value == SwipeToDismissBoxValue.EndToStart) {
-                onDelete()
+                onArchive()
                 true
             } else false
         }
@@ -68,12 +68,12 @@ fun TaskCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(16.dp))
-                    .background(SwipeDeleteBackground),
+                    .background(Color(0xFFFF9800)),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Icon(
-                    Icons.Default.Delete,
-                    contentDescription = stringResource(R.string.delete_task),
+                    Icons.Default.Archive,
+                    contentDescription = stringResource(R.string.archive),
                     tint = Color.White,
                     modifier = Modifier.padding(end = 24.dp)
                 )
@@ -99,8 +99,19 @@ fun TaskCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
                     .background(completedOverlay)
             ) {
+                // Color strip on left
+                if (task.colorHex != null) {
+                    Box(
+                        modifier = Modifier
+                            .width(4.dp)
+                            .fillMaxHeight()
+                            .background(parseTagColor(task.colorHex))
+                            .align(Alignment.CenterStart)
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -133,6 +144,49 @@ fun TaskCard(
                         )
                     }
 
+                    // Due date & repeat indicators
+                    val hasDueDate = task.dueDate != null
+                    val hasRepeat = task.repeatMode != "none"
+                    val hasSubtasks = taskWithTags.subtasks.isNotEmpty()
+
+                    if (hasDueDate || hasRepeat) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.padding(start = 48.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (hasDueDate) {
+                                val isOverdue = task.dueDate!! < System.currentTimeMillis() && !task.isCompleted
+                                val dueDateFormat = java.text.SimpleDateFormat("dd.MM", java.util.Locale.getDefault())
+                                val dateColor = if (isOverdue) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurfaceVariant
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        Icons.Default.CalendarToday,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(12.dp),
+                                        tint = dateColor
+                                    )
+                                    Spacer(modifier = Modifier.width(3.dp))
+                                    Text(
+                                        text = dueDateFormat.format(java.util.Date(task.dueDate)),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = dateColor
+                                    )
+                                }
+                            }
+                            if (hasRepeat) {
+                                Icon(
+                                    Icons.Default.Repeat,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(12.dp),
+                                    tint = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+                        }
+                    }
+
                     if (task.description.isNotBlank()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
@@ -143,6 +197,33 @@ fun TaskCard(
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.padding(start = 48.dp)
                         )
+                    }
+
+                    // Subtask progress
+                    if (hasSubtasks) {
+                        val completedSubs = taskWithTags.subtasks.count { it.isCompleted }
+                        val total = taskWithTags.subtasks.size
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Row(
+                            modifier = Modifier.padding(start = 48.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            LinearProgressIndicator(
+                                progress = { completedSubs.toFloat() / total },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(2.dp)),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "$completedSubs/$total",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
 
                     if (tags.isNotEmpty()) {

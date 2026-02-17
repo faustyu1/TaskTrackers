@@ -1,11 +1,20 @@
 package ru.faustyu.tasktrackers.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,81 +37,73 @@ fun SortBottomSheet(
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         CompositionLocalProvider(LocalContext provides localizedContext) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 32.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.sort_by),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            val sortOptions = listOf(
-                SortMode.DATE_DESC to stringResource(R.string.sort_date_desc),
-                SortMode.DATE_ASC to stringResource(R.string.sort_date_asc),
-                SortMode.ALPHA_ASC to stringResource(R.string.sort_alpha_asc),
-                SortMode.ALPHA_DESC to stringResource(R.string.sort_alpha_desc),
-                SortMode.IMPORTANCE to stringResource(R.string.sort_importance),
-                SortMode.URGENCY to stringResource(R.string.sort_urgency),
-                SortMode.SPHERE to stringResource(R.string.sort_sphere)
-            )
-
-            val sortIcons = listOf(
-                Icons.Default.ArrowDownward,
-                Icons.Default.ArrowUpward,
-                Icons.Default.SortByAlpha,
-                Icons.Default.SortByAlpha,
-                Icons.Default.PriorityHigh,
-                Icons.Default.Schedule,
-                Icons.Default.Category
-            )
-
-            sortOptions.forEachIndexed { index, (mode, label) ->
-                val isSelected = mode == currentSort
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = label,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface
-                        )
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = sortIcons[index],
-                            contentDescription = null,
-                            tint = if (isSelected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    trailingContent = {
-                        if (isSelected) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ListItemDefaults.colors(
-                        containerColor = if (isSelected)
-                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                        else MaterialTheme.colorScheme.surface
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 32.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = stringResource(R.string.sort_by),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
-                if (index < sortOptions.size - 1) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
-                    )
+
+                val sortOptions = listOf(
+                    Triple(SortMode.DATE_DESC, stringResource(R.string.sort_date_desc), Icons.Default.ArrowDownward),
+                    Triple(SortMode.DATE_ASC, stringResource(R.string.sort_date_asc), Icons.Default.ArrowUpward),
+                    Triple(SortMode.ALPHA_ASC, stringResource(R.string.sort_alpha_asc), Icons.Default.SortByAlpha),
+                    Triple(SortMode.ALPHA_DESC, stringResource(R.string.sort_alpha_desc), Icons.Default.SortByAlpha),
+                    Triple(SortMode.IMPORTANCE, stringResource(R.string.sort_importance), Icons.Default.PriorityHigh),
+                    Triple(SortMode.URGENCY, stringResource(R.string.sort_urgency), Icons.Default.Schedule),
+                    Triple(SortMode.SPHERE, stringResource(R.string.sort_sphere), Icons.Default.Category),
+                    Triple(SortMode.DUE_DATE, stringResource(R.string.sort_due_date), Icons.Default.CalendarToday),
+                    // Triple(SortMode.MANUAL, stringResource(R.string.sort_manual), Icons.Default.DragHandle) // Manual sorting might need different UI or reordering
+                )
+
+                sortOptions.forEach { (mode, label, icon) ->
+                    val isSelected = mode == currentSort
+                    
+                    Surface(
+                        onClick = { 
+                            onSelectSort(mode)
+                            onDismiss()
+                        },
+                        shape = RoundedCornerShape(50), // Fully rounded / pill shape
+                        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (isSelected) {
+                                Icon(
+                                    Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
-        }
-        }
     }
+}

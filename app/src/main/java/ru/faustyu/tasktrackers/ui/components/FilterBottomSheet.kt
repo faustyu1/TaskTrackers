@@ -33,74 +33,73 @@ fun FilterBottomSheet(
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         CompositionLocalProvider(LocalContext provides localizedContext) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 32.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 32.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = stringResource(R.string.filter_by_tags),
-                    style = MaterialTheme.typography.titleLarge
-                )
-                if (selectedTagIds.isNotEmpty()) {
-                    TextButton(onClick = onClear) {
-                        Text(stringResource(R.string.clear_all))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.filter_by_tags),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    if (selectedTagIds.isNotEmpty()) {
+                        TextButton(onClick = onClear) {
+                            Text(stringResource(R.string.clear_all))
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            val groups = listOf(
-                TagGroup.READINESS to stringResource(R.string.group_readiness),
-                TagGroup.IMPORTANCE to stringResource(R.string.group_importance),
-                TagGroup.URGENCY to stringResource(R.string.group_urgency),
-                TagGroup.SPHERE to stringResource(R.string.group_sphere),
-                TagGroup.CUSTOM to stringResource(R.string.group_custom)
-            )
+                val groups = listOf(
+                    TagGroup.READINESS to stringResource(R.string.group_readiness),
+                    TagGroup.IMPORTANCE to stringResource(R.string.group_importance),
+                    TagGroup.URGENCY to stringResource(R.string.group_urgency),
+                    TagGroup.SPHERE to stringResource(R.string.group_sphere),
+                    TagGroup.CUSTOM to stringResource(R.string.group_custom)
+                )
 
-            groups.forEach { (group, groupName) ->
-                val tagsInGroup = allTags.filter { it.group == group }
-                if (tagsInGroup.isNotEmpty()) {
-                    Text(
-                        text = groupName,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
-                    )
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        tagsInGroup.forEach { tag ->
-                            val isSelected = tag.tagId in selectedTagIds
-                            val tagColor = parseTagColor(tag.colorHex)
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = { onToggleTag(tag.tagId) },
-                                label = {
-                                    Text(
-                                        if (isRussian) tag.nameRu else tag.name,
-                                        style = MaterialTheme.typography.labelMedium
+                groups.forEach { (group, groupName) ->
+                    val tagsInGroup = allTags.filter { it.group == group }
+                    if (tagsInGroup.isNotEmpty()) {
+                        Text(
+                            text = groupName,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
+                        )
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            tagsInGroup.forEach { tag ->
+                                val isSelected = tag.tagId in selectedTagIds
+                                val tagColor = parseTagColor(tag.colorHex)
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = { onToggleTag(tag.tagId) },
+                                    label = {
+                                        Text(
+                                            if (isRussian) tag.nameRu else tag.name,
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = tagColor.copy(alpha = 0.2f),
+                                        selectedLabelColor = tagColor
                                     )
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = tagColor.copy(alpha = 0.2f),
-                                    selectedLabelColor = tagColor
                                 )
-                            )
+                            }
                         }
                     }
                 }
             }
-            }
-        }
         }
     }
 }

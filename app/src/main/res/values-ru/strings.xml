@@ -6,24 +6,23 @@
     <string name="search_tasks">Поиск задач…</string>
     <string name="no_tasks_yet">Задач пока нет</string>
     <string name="tap_plus_to_create">Нажмите + чтобы создать первую задачу</string>
-    <string name="no_matching_tasks">Ничего не найдено</string>
-    <string name="try_different_filters">Попробуйте другие фильтры или поисковой запрос</string>
+    <string name="no_matching_tasks">Нет подходящих задач</string>
+    <string name="try_different_filters">Попробуйте другие фильтры или запрос</string>
     <string name="task_count">%1$d задач</string>
     <string name="completed_count">%1$d выполнено</string>
 
     <!-- Task Create/Edit -->
     <string name="create_task">Создать задачу</string>
-    <string name="edit_task">Редактировать задачу</string>
+    <string name="edit_task">Редактировать</string>
     <string name="task_title">Название задачи</string>
     <string name="task_description">Описание (необязательно)</string>
     <string name="title_required">Название обязательно</string>
     <string name="select_tags">Выберите теги</string>
-    <string name="save_changes">Сохранить изменения</string>
+    <string name="save_changes">Сохранить</string>
 
     <!-- Custom Tags -->
     <string name="add_custom_tag">Добавить свой тег</string>
-    <string name="tag_name_en">Название тега (English)</string>
-    <string name="tag_name_ru">Название тега (Русский)</string>
+    <string name="tag_name">Название тега</string>
     <string name="tag_group">Группа</string>
     <string name="add">Добавить</string>
 
@@ -45,16 +44,43 @@
     <string name="sort_importance">По важности</string>
     <string name="sort_urgency">По срочности</string>
     <string name="sort_sphere">По сфере</string>
+    <string name="sort_due_date">По дедлайну</string>
+    <string name="sort_manual">Ручной порядок</string>
 
     <!-- Task Detail -->
     <string name="task_details">Детали задачи</string>
     <string name="tags">Теги</string>
     <string name="created_at">Создана: %1$s</string>
+    <string name="created">Создана</string>
     <string name="status_completed">Выполнена</string>
     <string name="status_active">Активна</string>
+    <string name="mark_completed">Завершить</string>
+    <string name="mark_active">Вернуть</string>
     <string name="delete_task">Удалить задачу</string>
-    <string name="delete_confirmation">Вы уверены, что хотите удалить эту задачу? Это действие нельзя отменить.</string>
+    <string name="delete_task_confirmation">Вы уверены, что хотите удалить эту задачу? Это действие нельзя отменить.</string>
     <string name="delete">Удалить</string>
+    <string name="clear">Очистить</string>
+
+    <!-- Deadline -->
+    <string name="deadline">Дедлайн</string>
+    <string name="no_deadline">Без дедлайна</string>
+    <string name="overdue">Просрочено!</string>
+
+    <!-- Repeat -->
+    <string name="repeat_mode">Повтор</string>
+    <string name="repeat_none">Нет</string>
+    <string name="repeat_daily">Ежедневно</string>
+    <string name="repeat_weekly">Еженедельно</string>
+    <string name="repeat_monthly">Ежемесячно</string>
+
+    <!-- Color -->
+    <string name="task_color">Цвет задачи</string>
+    <string name="no_color">Без цвета</string>
+
+    <!-- Subtasks -->
+    <string name="subtasks">Подзадачи</string>
+    <string name="subtask_title">Название подзадачи</string>
+    <string name="add_subtask">Добавить подзадачу</string>
 
     <!-- Settings -->
     <string name="settings">Настройки</string>
@@ -66,6 +92,58 @@
     <string name="app_version">Версия 1.0</string>
     <string name="theme">Тема</string>
     <string name="theme_dynamic_description">Динамические цвета из обоев (Material You)</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+
+    <!-- Export / Import -->
+    <string name="data">Данные</string>
+    <string name="export_data">Экспорт данных</string>
+    <string name="export_description">Сохранить все задачи и теги в JSON файл</string>
+    <string name="import_data">Импорт данных</string>
+    <string name="import_description">Восстановить задачи и теги из JSON бэкапа</string>
+
+    <!-- Archive -->
+    <string name="archive">Архив</string>
+    <string name="archived_tasks">Архивные задачи</string>
+    <string name="no_archived_tasks">Нет архивных задач</string>
+    <string name="archived_tasks_description">Завершённые задачи будут здесь</string>
+    <string name="unarchive">Восстановить</string>
+    <string name="archived_count">%1$d в архиве</string>
+
+    <!-- Statistics -->
+    <string name="statistics">Статистика</string>
+    <string name="stat_total">Всего</string>
+    <string name="stat_active">Активных</string>
+    <string name="stat_completed">Выполнено</string>
+    <string name="stat_overdue">Просрочено</string>
+    <string name="stat_streak">Серия выполнения</string>
+    <string name="stat_streak_days">%1$d дней</string>
+    <string name="stat_completion_rate">Процент выполнения</string>
+    <string name="stat_done">выполнено</string>
+    <string name="stat_by_sphere">Задачи по сферам</string>
+    <string name="stat_activity_week">Активность (30 дней)</string>
+    <string name="day_sun">Вс</string>
+    <string name="day_mon">Пн</string>
+    <string name="day_tue">Вт</string>
+    <string name="day_wed">Ср</string>
+    <string name="day_thu">Чт</string>
+    <string name="day_fri">Пт</string>
+    <string name="day_sat">Сб</string>
+
+    <!-- Eisenhower Matrix -->
+    <string name="eisenhower_matrix">Матрица Эйзенхауэра</string>
+    <string name="q1_do_first">🔴 Сделать первым</string>
+    <string name="q2_schedule">🔵 Запланировать</string>
+    <string name="q3_delegate">🟠 Делегировать</string>
+    <string name="q4_eliminate">⚪ Исключить</string>
+    <string name="urgent">Срочно</string>
+    <string name="not_urgent">Не срочно</string>
+
+    <!-- Widget -->
+    <string name="widget_name">Виджет задач</string>
+    <string name="widget_description">Показывает ваши предстоящие задачи</string>
+    <string name="widget_empty">Нет задач</string>
 
     <!-- Common -->
     <string name="close">Закрыть</string>

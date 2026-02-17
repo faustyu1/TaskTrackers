@@ -10,5 +10,10 @@ data class Task(
     val title: String,
     val description: String = "",
     val isCompleted: Boolean = false,
+    val isArchived: Boolean = false,
+    val dueDate: Long? = null,
+    val colorHex: String? = null,
+    val repeatMode: String = "none", // none, daily, weekly, monthly
+    val manualSortOrder: Int = 0,
     val createdAt: Long = System.currentTimeMillis()
 )

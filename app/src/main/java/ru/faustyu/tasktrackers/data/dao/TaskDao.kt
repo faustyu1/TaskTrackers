@@ -10,8 +10,18 @@ import ru.faustyu.tasktrackers.data.model.TaskWithTags
 interface TaskDao {
 
     @Transaction
-    @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
+    @Query("SELECT * FROM tasks WHERE isArchived = 0 ORDER BY createdAt DESC")
     fun getAllTasksWithTags(): Flow<List<TaskWithTags>>
+
+    @Transaction
+    @Query("SELECT * FROM tasks WHERE isArchived = 1 ORDER BY createdAt DESC")
+    fun getArchivedTasksWithTags(): Flow<List<TaskWithTags>>
+
+    @Query("UPDATE tasks SET isArchived = 1 WHERE taskId = :taskId")
+    suspend fun archiveTask(taskId: Long)
+
+    @Query("UPDATE tasks SET isArchived = 0 WHERE taskId = :taskId")
+    suspend fun unarchiveTask(taskId: Long)
 
     @Transaction
     @Query("SELECT * FROM tasks WHERE taskId = :taskId")
@@ -59,4 +69,11 @@ interface TaskDao {
             insertTaskTagCrossRef(TaskTagCrossRef(task.taskId, tagId))
         }
     }
+
+    @Query("UPDATE tasks SET manualSortOrder = :sortOrder WHERE taskId = :taskId")
+    suspend fun updateManualSortOrder(taskId: Long, sortOrder: Int)
+
+    @Transaction
+    @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
+    suspend fun getAllTasksForExport(): List<TaskWithTags>
 }

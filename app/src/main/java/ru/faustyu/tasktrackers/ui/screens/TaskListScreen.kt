@@ -35,15 +35,17 @@ fun TaskListScreen(
     uiState: TaskListUiState,
     isRussian: Boolean,
     onToggleComplete: (TaskWithTags) -> Unit,
-    onDeleteTask: (TaskWithTags) -> Unit,
     onTaskClick: (Long) -> Unit,
-    onAddTask: (String, String, List<Long>) -> Unit,
-    onAddCustomTag: (String, String, TagGroup, String) -> Unit,
+    onAddTask: (String, String, List<Long>, Long?, String?, String) -> Unit,
+    onAddCustomTag: (String, TagGroup, String) -> Unit,
     onToggleFilterTag: (Long) -> Unit,
     onClearFilters: () -> Unit,
     onSetSortMode: (SortMode) -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToArchive: () -> Unit,
+    onNavigateToStatistics: () -> Unit,
+    onArchiveTask: (TaskWithTags) -> Unit
 ) {
     var showCreateSheet by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
@@ -109,6 +111,13 @@ fun TaskListScreen(
                     IconButton(onClick = { showSortSheet = true }) {
                         Icon(Icons.Default.Sort, contentDescription = stringResource(R.string.sort_by))
                     }
+                    IconButton(onClick = onNavigateToArchive) {
+                        Icon(Icons.Outlined.Inventory2, contentDescription = stringResource(R.string.archive))
+                    }
+                    IconButton(onClick = onNavigateToStatistics) {
+                        Icon(Icons.Outlined.BarChart, contentDescription = stringResource(R.string.statistics))
+                    }
+
                     IconButton(onClick = onNavigateToSettings) {
                         Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.settings))
                     }
@@ -219,7 +228,7 @@ fun TaskListScreen(
                         taskWithTags = taskWithTags,
                         isRussian = isRussian,
                         onToggleComplete = { onToggleComplete(taskWithTags) },
-                        onDelete = { onDeleteTask(taskWithTags) },
+                        onArchive = { onArchiveTask(taskWithTags) },
                         onClick = { onTaskClick(taskWithTags.task.taskId) },
                         modifier = Modifier.animateItem(
                             fadeInSpec = tween(300),
@@ -245,8 +254,8 @@ fun TaskListScreen(
         TaskEditSheet(
             allTags = uiState.allTags,
             isRussian = isRussian,
-            onSave = { title, desc, tagIds ->
-                onAddTask(title, desc, tagIds)
+            onSave = { title, desc, tagIds, dueDate, colorHex, repeatMode ->
+                onAddTask(title, desc, tagIds, dueDate, colorHex, repeatMode)
                 showCreateSheet = false
             },
             onAddCustomTag = onAddCustomTag,
