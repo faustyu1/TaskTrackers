@@ -83,5 +83,5 @@ app/src/main/java/ru/faustyu/tasktrackers/
     └── AppNavigation.kt # Навигация с анимациями
 ```
 
-https://drive.google.com/drive/folders/1cebolcQ9wG5S_-HifVAhvYA0vUi50nbu
+https://drive.google.com/drive/folders/1HV7P-hWko1uLoFRUrJLEAZpGtQ6pwcI-
 Превью как выглядит
